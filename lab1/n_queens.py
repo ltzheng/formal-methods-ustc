@@ -48,7 +48,7 @@ def pure_sat(n):
     print('elapsed time of pure SAT (ms): %s' % ((sat_end - sat_start) * 1000))
 
 if __name__ == '__main__':
-    n = 20
+    n = 8
     print('smt solution:\n')
     smt(n)
     print('\npure sat solution:\n')
