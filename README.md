@@ -1,11 +1,17 @@
-# formal-methods-ustc
+# A Guide to Formal Methods
 
-Formal Methods course at University of Science and Technology of China.
+The code for course *A Guide to Formal Methods* at University of Science and Technology of China.
 
 ## SAT Solver
+
+Tool: Z3 Solver
 
 ### N Queens
 
 ### Arithmetic in SAT
 
-## NuSMV
+## Model Checking
+
+Tool: NuSMV
+
+### Mutual Exclusion
