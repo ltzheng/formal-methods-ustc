@@ -1,14 +1,14 @@
-# Lab 1
+# Lab 1: SAT Solver
 
 **郑龙韬 PB18061352**
 
 ## Task 1: N-Queens
 
-代码实现在[n_queens.py](./n_queens.py)，包含SMT的实现与pure SAT的实现。
+代码实现在[n_queens.py](./n_queens.py)，包含SMT的实现与pure SAT的实现。SMT使用slides上的代码，SAT实现的约束为行约束、列约束、对角线约束。
 
 ### 实验结果
 
-以下表格和图对比了N取值不同时，两者的效率。
+以下表格和图对比了N取值不同时，两者的效率，观察可以得出，pure SAT的效率要比SMT高，因为实际上SMT需要转化为SAT再进行求解。
 
 |N|Elapsed time of SMT (ms)|Elapsed time of pure SAT (ms)|
 |:--:|:--:|:--:|
@@ -19,7 +19,7 @@
 |32|2338.5613|439.6229|
 |40|25855.8326|849.2498|
 
-![](./n_queens.png)
+![](./figs/n_queens.png)
 
 ## Task 2: Arithmetic in pure SAT
 
@@ -57,11 +57,11 @@
 
 将上述三个约束记为$\phi$，输入给SAT Solver的条件为$\phi\wedge a \wedge b$，其中$a$，$b$分别为两个操作数的二进制布尔表示（如$a=5$的二进制$101$转化为$a_2 \wedge \neg a_1 \wedge a_0$）。
 
-在实际实现中（代码[subtraction.py](./subtraction.py)），需要首先对两个数进行在高位补零操作，方便运算。
+在实际实现中（代码[subtraction.py](./subtraction.py)），需要首先对位数较少的数进行在高位补零操作，方便运算。约束条件即为上面一行提到的输入给SAT Solver的条件。
 
 ### 代码使用文档
 
-修改`__main__`中的变量a、b的赋值语句，运行`python subtraction.py`即可得到输出结果，包含从SAT Solver输出提取出的对$d_i$的赋值、以及二进制表示的计算结果。
+修改`__main__`中的变量a、b的赋值语句（十进制），运行`python subtraction.py`即可得到输出结果，包含从SAT Solver输出提取出的对$d_i$的赋值、以及二进制表示的计算结果。
 
 ### 实验结果
 
