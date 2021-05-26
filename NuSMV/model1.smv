@@ -1,0 +1,27 @@
+MODULE main
+    VAR
+        pr1and2 : {nn, tn, nt, cn, tt, nc, ct, tc, cc};
+    ASSIGN
+        init(pr1and2) := nn;
+        next(pr1and2) := 
+            case
+                (pr1and2 = nn) : {nn, tn, nt};
+                (pr1and2 = tn) : {cn, tt};
+                (pr1and2 = nt) : {tt, nc};
+                (pr1and2 = cn) : {nn, ct};
+                (pr1and2 = tt) : {ct, tc};
+                (pr1and2 = nc) : {nn, tc};
+                TRUE : pr1and2;
+            esac;
+
+    -- safety
+    SPEC AG!(pr1and2 = cc)
+    -- liveness
+    SPEC AG((pr1and2 = tn | pr1and2 = tt | pr1and2 = tc) -> AF (pr1and2 = cn | pr1and2 = ct))
+    SPEC AG((pr1and2 = nt | pr1and2 = tt | pr1and2 = ct) -> AF (pr1and2 = nc | pr1and2 = tc))
+    -- non-blocking
+    SPEC AG((pr1and2 = nn | pr1and2 = nt | pr1and2 = nc) -> EF (pr1and2 = tn | pr1and2 = tt | pr1and2 = tc))
+    SPEC AG((pr1and2 = nn | pr1and2 = tn | pr1and2 = cn) -> EF (pr1and2 = nt | pr1and2 = tt | pr1and2 = ct))
+    -- no strict sequencing
+    SPEC EF((pr1and2 = cn | pr1and2 = ct) & E[(pr1and2 = cn | pr1and2 = ct) U ((pr1and2 != cn & pr1and2 != ct) & E[(pr1and2 != nc & pr1and2 != tc) U (pr1and2 = cn | pr1and2 = ct)])])
+    SPEC EF((pr1and2 = nc | pr1and2 = tc) & E[(pr1and2 = nc | pr1and2 = tc) U ((pr1and2 != nc & pr1and2 != tc) & E[(pr1and2 != cn & pr1and2 != ct) U (pr1and2 = nc | pr1and2 = tc)])])
