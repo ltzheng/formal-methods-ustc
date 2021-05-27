@@ -20,7 +20,7 @@ Only one process is in its critical section at any time.
 
 CTL: $AG\ \neg(c_1\wedge c_2)$
 
-NuSMV code:
+NuSMV code (for [model2](model.smv)):
 
 ```
 SPEC AG!((pr1.st = c) & (pr2.st = c))
@@ -100,16 +100,21 @@ MODULE main
 
     -- safety
     SPEC AG!(pr1and2 = cc)
+
     -- liveness
     SPEC AG((pr1and2 = tn | pr1and2 = tt | pr1and2 = tc) -> AF (pr1and2 = cn | pr1and2 = ct))
     SPEC AG((pr1and2 = nt | pr1and2 = tt | pr1and2 = ct) -> AF (pr1and2 = nc | pr1and2 = tc))
+
     -- non-blocking
     SPEC AG((pr1and2 = nn | pr1and2 = nt | pr1and2 = nc) -> EF (pr1and2 = tn | pr1and2 = tt | pr1and2 = tc))
     SPEC AG((pr1and2 = nn | pr1and2 = tn | pr1and2 = cn) -> EF (pr1and2 = nt | pr1and2 = tt | pr1and2 = ct))
+    
     -- no strict sequencing
     SPEC EF((pr1and2 = cn | pr1and2 = ct) & E[(pr1and2 = cn | pr1and2 = ct) U ((pr1and2 != cn & pr1and2 != ct) & E[(pr1and2 != nc & pr1and2 != tc) U (pr1and2 = cn | pr1and2 = ct)])])
     SPEC EF((pr1and2 = nc | pr1and2 = tc) & E[(pr1and2 = nc | pr1and2 = tc) U ((pr1and2 != nc & pr1and2 != tc) & E[(pr1and2 != cn & pr1and2 != ct) U (pr1and2 = nc | pr1and2 = tc)])])
 ```
+
+(The specifications here are modified a bit from the ones from [model2](model.smv) for given state representations)
 
 Run in Terminal:
 ```
@@ -121,6 +126,7 @@ Result:
 ![](figs/model1result.png)
 
 Therefore,
+
 - Safety is satisfied
 - Liveness is **not** satisfied
 - Non-blocking is satisfied
@@ -128,7 +134,7 @@ Therefore,
 
 ---
 
-Improvements here: [model2.smv](model2.smv)
+Model2 improvements here: [model2.smv](model2.smv)
 
 ```
 MODULE main
