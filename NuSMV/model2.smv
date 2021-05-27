@@ -1,0 +1,40 @@
+MODULE main
+    VAR
+        pr1 : process proc(pr2.st, turn, FALSE);
+        pr2 : process proc(pr1.st, turn, TRUE);
+        turn : boolean;
+    ASSIGN
+        init(turn) := FALSE;
+
+    -- safety
+    SPEC AG!((pr1.st = c) & (pr2.st = c))
+    -- liveness
+    SPEC AG((pr1.st = t) -> AF (pr1.st = c))
+    SPEC AG((pr2.st = t) -> AF (pr2.st = c))
+    -- non-blocking
+    SPEC AG((pr1.st = n) -> EF (pr1.st = t))
+    SPEC AG((pr2.st = n) -> EF (pr2.st = t))
+    -- no strict sequencing
+    SPEC EF(pr1.st = c & E[pr1.st = c U (pr1.st != c & E[pr2.st != c U pr1.st = c])])
+    SPEC EF(pr2.st = c & E[pr2.st = c U (pr2.st != c & E[pr1.st != c U pr2.st = c])])
+
+MODULE proc(other-st, turn, myturn)
+    VAR
+        st : {n, t, c};
+    ASSIGN
+        init(st) := n;
+        next(st) := 
+            case
+                (st = n) : {t, n};
+                (st = t) & (other-st = n) : c;
+                (st = t) & (other-st = t) & (turn = myturn) : c;
+                (st = c) : {c, n};
+                TRUE : st;
+            esac;
+        next(turn) := 
+            case
+                turn = myturn & st = c : !turn;
+                TRUE : turn;
+            esac;
+    FAIRNESS running
+    FAIRNESS !(st = c)
